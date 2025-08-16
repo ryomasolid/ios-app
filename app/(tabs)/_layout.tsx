@@ -31,6 +31,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color }: { color: string; }) => <TabBarIcon name="pencil-circle" color={color} />,
         }}
       />
+      {/* Calendarタブ */}
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: 'calendar',
+          tabBarIcon: ({ color }: { color: string; }) => <TabBarIcon name="calendar" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
