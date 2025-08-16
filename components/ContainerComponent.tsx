@@ -1,6 +1,5 @@
 import { Colors } from '@/constants/Colors';
 import { colorAtom } from '@/store/atoms';
-import { useAtomValue } from 'jotai';
 import { ReactNode } from 'react';
 import { View, type ViewProps } from 'react-native';
 
@@ -9,12 +8,13 @@ export type ContainerComponentProps = ViewProps & {
 };
 
 export function ContainerComponent({ children }: ContainerComponentProps) {
+  const { useAtomValue } = require("jotai");
   const color = useAtomValue(colorAtom)
   const bgColor = !color ? Colors.dark.text : Colors.light.text
 
   return (
     <>
-      <View style={{ backgroundColor: bgColor }}>
+      <View style={{ backgroundColor: bgColor, padding: 20 }}>
         {children}
       </View>
     </>

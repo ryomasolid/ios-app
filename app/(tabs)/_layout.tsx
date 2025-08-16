@@ -4,27 +4,31 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+  color: string;
+}) {
+  return <MaterialCommunityIcons size={28} style={{ marginBottom: -3 }} {...props} />;
+}
+
 export default function TabLayout() {
+  const commonHeaderOptions = {
+    headerShown: true,
+    tabBarStyle: Platform.select({
+      ios: { position: 'absolute' },
+      default: {},
+    }),
+    header: () => <CustomHeader />,
+  };
+
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: true,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
-        header: () => <CustomHeader />
-      }}>
-      {/* チェックタブ */}
+    <Tabs screenOptions={commonHeaderOptions}>
+      {/* Checkタブ */}
       <Tabs.Screen
         name="check"
         options={{
           title: 'Check',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
+          tabBarIcon: ({ color }: { color: string; }) => <TabBarIcon name="pencil-circle" color={color} />,
         }}
       />
     </Tabs>

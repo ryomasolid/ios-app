@@ -1,56 +1,57 @@
+import { CircleWithTextComponent } from '@/components/CircleWithTextComponent';
 import { ContainerComponent } from '@/components/ContainerComponent';
 import { useThemeStyles } from '@/hooks/useThemeStyles';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
+
+const today = new Date();
+const formattedDate = today.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 
 export default function CheckScreen() {
-  const handleClickOk = () => {
-    console.log("ああああ")
+  const handleClickYes = () => {
+    console.log("間食しました。")
   }
 
-  const handleClickNg = () => { }
+  const handleClickNo = () => {
+    console.log("間食しませんでした。")
+  }
 
   const theme = useThemeStyles()
 
   return (
     <ContainerComponent>
-      <View style={styles.titleContainer}>
-        <IconButton
-          icon="emoticon-excited-outline"
-          iconColor={'#FF6600'}
-          size={100}
-          onPress={handleClickOk}
-        />
-        <IconButton
-          icon="emoticon-frown"
-          iconColor={'#66CCFF'}
-          size={100}
-          onPress={handleClickNg}
-        />
+      <Text variant="bodyLarge" style={styles.titleContainer}>Did you snack today?</Text>
+
+      <View style={styles.bodyContainer}>
+        <CircleWithTextComponent text1='Yes,' text2='I snacked' isGreen={false} handleClick={handleClickYes} />
+        <CircleWithTextComponent text1='No,' text2="I didn't" isGreen={true} handleClick={handleClickNo} />
       </View>
 
-      <Text variant="bodyLarge" style={{ textAlign: "center" }}>チェックしてください</Text>
+      <Text variant="bodyLarge" style={styles.dateText}>{formattedDate}</Text>
     </ContainerComponent>
   );
 }
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: 'row',
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  bodyContainer: {
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    paddingVertical: 20,
+    gap: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  dateText: {
+    textAlign: 'center',
+    fontSize: 14,
   },
 });

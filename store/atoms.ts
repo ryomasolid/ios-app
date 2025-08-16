@@ -1,3 +1,3 @@
-import { atom } from 'jotai';
+const { atom } = require("jotai");
 
 export const colorAtom = atom(false);

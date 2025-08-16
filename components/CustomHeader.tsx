@@ -8,7 +8,7 @@ export function CustomHeader() {
   return (
     <Appbar.Header style={{ backgroundColor: theme.color1 }}>
       <Appbar.BackAction onPress={() => { }} />
-      <Appbar.Content title="Don't buy and eat" color={theme.color2} titleStyle={styles.title} />
+      <Appbar.Content title="Don't snack" color={theme.color2} titleStyle={styles.title} />
       <Appbar.Action icon="magnify" onPress={() => { }} />
     </Appbar.Header>
   );
