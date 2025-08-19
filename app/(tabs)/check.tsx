@@ -1,8 +1,11 @@
 import { CheckmarkComponent } from '@/components/CheckmarkComponent';
 import { CircleWithTextComponent } from '@/components/CircleWithTextComponent';
 import { ContainerComponent } from '@/components/ContainerComponent';
+import { STATUS_NO, STATUS_NONE, STATUS_YES } from '@/constants/Status';
 import { useThemeStyles } from '@/hooks/useThemeStyles';
-import React, { useState } from 'react';
+import { calendarAtom } from '@/store/atoms';
+import { getAllData, getStatusByDate, setStatusForDate } from '@/store/firestore';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
@@ -13,36 +16,81 @@ const formattedDate = today.toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
+const year = today.getFullYear();
+const month = (today.getMonth() + 1).toString().padStart(2, '0');
+const day = today.getDate().toString().padStart(2, '0');
+const yyyymmdd = `${year}${month}${day}`;
+
 export default function CheckScreen() {
   const theme = useThemeStyles()
 
-  const [isCheckYes, setIsCheckYes] = useState<boolean>(false);
-  const [isCheckNo, setIsCheckNo] = useState<boolean>(false);
+  const [status, setStatus] = useState<string>('0');
+
+  const { useSetAtom } = require("jotai");
+  const setClendarValues = useSetAtom(calendarAtom);
+
+  const loadData = async () => {
+    try {
+      const fetchedData = await getAllData();
+      setClendarValues(fetchedData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSetStatus = async (value: string) => {
+    await setStatusForDate({
+      date: yyyymmdd,
+      status: value
+    });
+    await loadData()
+  };
 
   const handleClickYes = () => {
-    if (isCheckYes) return
+    if (status === STATUS_YES) {
+      setStatus(STATUS_NONE)
+      handleSetStatus(STATUS_NONE)
+      return
+    }
 
-    setIsCheckNo(false)
-    setIsCheckYes(true)
+    setStatus(STATUS_YES)
+    handleSetStatus(STATUS_YES)
   }
 
   const handleClickNo = () => {
-    if (isCheckNo) return
+    if (status === STATUS_NO) {
+      setStatus(STATUS_NONE)
+      handleSetStatus(STATUS_NONE)
+      return
+    }
 
-    setIsCheckYes(false)
-    setIsCheckNo(true)
+    setStatus(STATUS_NO)
+    handleSetStatus(STATUS_NO)
   }
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const fetchedData = await getStatusByDate(yyyymmdd);
+        setStatus(String(fetchedData));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadData();
+  }, [])
 
   return (
     <ContainerComponent>
       <Text variant="bodyLarge" style={[styles.titleContainer, { color: theme.color1 }]}>Did you snack today?</Text>
 
       <View style={styles.bodyContainer}>
-        {!isCheckYes
+        {status !== STATUS_YES
           ? <CircleWithTextComponent text1='Yes,' text2='I snacked' isGreen={false} handleClick={handleClickYes} />
           : <CheckmarkComponent isGreen={false} onPress={handleClickYes} />
         }
-        {!isCheckNo
+        {status !== STATUS_NO
           ? <CircleWithTextComponent text1='No,' text2="I didn't" isGreen={true} handleClick={handleClickNo} />
           : <CheckmarkComponent isGreen={true} onPress={handleClickNo} />
         }

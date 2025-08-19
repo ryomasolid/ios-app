@@ -1,6 +1,10 @@
 import { ContainerComponent } from '@/components/ContainerComponent';
+import { STATUS_NO, STATUS_NONE, STATUS_YES } from '@/constants/Status';
 import { useThemeStyles } from '@/hooks/useThemeStyles';
-import React from 'react';
+import { calendarAtom } from '@/store/atoms';
+import { getAllData } from '@/store/firestore';
+import { CalendarDto } from '@/types/api';
+import React, { useEffect, useMemo } from 'react';
 import { Calendar } from 'react-native-calendars';
 
 const today = new Date().toISOString().split('T')[0];
@@ -8,14 +12,54 @@ const today = new Date().toISOString().split('T')[0];
 export default function CalendarScreen() {
   const theme = useThemeStyles()
 
+  const { useAtom } = require("jotai");
+  const [calendarValues, setClendarValues] = useAtom(calendarAtom);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const fetchedData = await getAllData();
+        setClendarValues(fetchedData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadData();
+  }, [])
+
+  const color = (value?: string) => {
+    switch (value) {
+      case STATUS_NONE:
+        return undefined
+      case STATUS_YES:
+        return '#FFC78A'
+      case STATUS_NO:
+        return '#5EDC74'
+      default:
+        return undefined
+    }
+  }
+
+  const markedDates = useMemo(() => {
+    return calendarValues.reduce((acc: any, current: CalendarDto) => {
+      const year = current.date.substring(0, 4);
+      const month = current.date.substring(4, 6);
+      const day = current.date.substring(6, 8);
+      const formattedDate = `${year}-${month}-${day}`;
+
+      return {
+        ...acc,
+        [formattedDate]: { selected: current.status === STATUS_NONE ? false : true, selectedColor: color(current.status) },
+      };
+    }, {});
+  }, [calendarValues]);
+
   return (
     <ContainerComponent>
       <Calendar
         current={today}
-        markedDates={{
-          '2025-08-19': { selected: true, selectedColor: '#5EDC74' },
-          '2025-08-20': { selected: true, selectedColor: '#FFC78A' }
-        }}
+        markedDates={markedDates}
         firstDay={1}
         hideExtraDays={true}
         enableSwipeMonths={true}
