@@ -2,13 +2,13 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAOXPeF51IVfpm0yD4o6X7_ZlVhl-3oTgQ",
-  authDomain: "don-t-snack.firebaseapp.com",
-  projectId: "don-t-snack",
-  storageBucket: "don-t-snack.firebasestorage.app",
-  messagingSenderId: "960322768343",
-  appId: "1:960322768343:web:ac85f46062993713c38f92",
-  measurementId: "G-6NC10NSRLG"
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 // Firebase の初期化
