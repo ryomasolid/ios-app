@@ -47,8 +47,6 @@ export default function CalendarScreen() {
           arrowColor: '#2D4150'
         }}
         style={{
-          marginVertical: 10,
-          paddingBottom: 10,
           backgroundColor: theme.color2
         }}
       />

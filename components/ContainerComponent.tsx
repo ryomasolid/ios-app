@@ -14,7 +14,7 @@ export function ContainerComponent({ children }: ContainerComponentProps) {
 
   return (
     <>
-      <View style={{ height: "100%", backgroundColor: bgColor, padding: 20 }}>
+      <View style={{ height: "100%", backgroundColor: bgColor, padding: 10 }}>
         {children}
       </View>
     </>
