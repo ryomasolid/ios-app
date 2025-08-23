@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 24,
     fontWeight: 'bold',
+    paddingTop: 10
   },
   bodyContainer: {
     flexDirection: 'column',
