@@ -1,37 +1,56 @@
-# アプリ名
+# DontSnack
 
-プロジェクトのキャッチフレーズや簡単な説明。
-
-## スクリーンショット
-<img src="./path/to/screenshot.png" width="300" />
+🍭 **「DontSnack」は、モバイルアプリです。** あなたの食生活を記録し、間食をしない習慣を築くお手伝いをします。このアプリは、ExpoとReact Nativeをベースに構築されております。
 
 ---
 
-## 開発環境のセットアップ
+## 🚀 はじめに
 
-### 前提条件
-- Node.js (v20.7.0)
+### インストールと実行
 
-### 🚀 インストール
+1.  このリポジトリをクローンします。
+    ```bash
+    git clone [https://github.com/your-username/dont-snack.git](https://github.com/your-username/dont-snack.git)
+    cd dont-snack
+    ```
+2.  依存関係をインストールします。
+    ```bash
+    npm install
+    ```
+3.  プロジェクトを起動します。
+    ```bash
+    npm start
+    ```
+4.  QRコードが表示されたら、お使いのスマートフォンの**Expo Go**アプリでスキャンするか、ブラウザでアクセスしてください。
 
-```
-# 依存関係をインストール
-npm install
+---
 
-# iOSシミュレータ、Androidエミュレータ、Web版の開発サーバーを起動します
-npx expo start
+## 💻 スクリプト
 
-# Webブラウザでアプリを実行します
-npm run web
-```
+`package.json`で定義されている主要なスクリプトは以下の通りです。
 
-### 技術スタック
-フレームワーク: Expo
+| スクリプト名 | 説明 |
+| :--- | :--- |
+| `npm start` | プロジェクトを開発モードで起動します。 |
+| `npm run android` | Androidエミュレーターまたは物理デバイスでアプリを起動します。 |
+| `npm run ios` | iOSシミュレーターまたは物理デバイスでアプリを起動します。 |
+| `npm run web` | Webブラウザでアプリを起動します。 |
+| `npm run lint` | コードのスタイルと潜在的な問題をチェックします。 |
+| `npm run reset-project` | プロジェクトをクリーンな状態にリセットします。 |
 
-言語: TypeScript
+---
 
-UIライブラリ: react-native-paper
+## 🛠️ 使用技術
 
-状態管理: jotai
+このプロジェクトは、最新のクロスプラットフォーム開発技術を活用しています。
 
-データベース: firebase
+* **Expo**: React Nativeフレームワークをベースに、迅速な開発とビルドプロセスを可能にします。
+* **Expo Router**: ファイルベースのルーティングシステムで、ナビゲーションをシンプルにします。
+* **React Native**: iOS、Android、Web向けにネイティブなユーザーインターフェースを構築するためのフレームワークです。
+* **Firebase**: バックエンドサービス（認証、データベースなど）を提供します。
+* **Jotai**: ステート管理ライブラリで、シンプルかつ効率的なグローバルステート管理を実現します。
+* **React Navigation**: アプリ内の画面間ナビゲーションを管理します。
+* **React Native Calendars**: 日付選択やカレンダー機能を提供します。
+* **TypeScript**: 型安全なJavaScriptコードを作成し、開発中のエラーを減らします。
+
+---
