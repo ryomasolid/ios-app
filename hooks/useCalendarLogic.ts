@@ -50,36 +50,73 @@ export const useCalendarLogic = () => {
   };
 
   const calculateStreak = () => {
+    // ISO 形式 'YYYY-MM-DD' を 'YYYYMMDD' に変換
     const todayYYYYMMDD = today.replace(/-/g, '');
+
+    // 日付でソートされたデータ
     const sortedData = [...calendarValues].sort((a, b) => a.date.localeCompare(b.date));
 
     let maxStreakCount = 0;
     let currentStreakCount = 0;
+    let todayStreakCount = 0;
+
+    // 最後のデータの日付を保持する変数
+    let lastDate = null;
+
     for (const item of sortedData) {
-      if (item.date > todayYYYYMMDD) break;
+      // 今日以降のデータは無視
+      if (item.date > todayYYYYMMDD) {
+        break;
+      }
+
+      // 連続しているかどうかの判定
+      const currentDate = new Date(`${item.date.slice(0, 4)}-${item.date.slice(4, 6)}-${item.date.slice(6, 8)}`);
+      if (lastDate && (currentDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24) > 1) {
+        // 日付が連続していない場合、ストリークをリセット
+        currentStreakCount = 0;
+      }
+
       if (item.status === STATUS_NO) {
         currentStreakCount++;
       } else {
-        maxStreakCount = Math.max(maxStreakCount, currentStreakCount);
         currentStreakCount = 0;
       }
-    }
-    maxStreakCount = Math.max(maxStreakCount, currentStreakCount);
 
-    let todayStreakCount = 0;
-    const todayData = sortedData.find(item => item.date === todayYYYYMMDD);
-    if (todayData && todayData.status === STATUS_NO) {
-      todayStreakCount = 1;
-      let currentDate = new Date(today);
-      while (true) {
-        currentDate.setDate(currentDate.getDate() - 1);
-        const previousDateYYYYMMDD = currentDate.toISOString().split('T')[0].replace(/-/g, '');
-        const previousData = sortedData.find(item => item.date === previousDateYYYYMMDD);
-        if (previousData && previousData.status === STATUS_NO) {
-          todayStreakCount++;
-        } else {
-          break;
+      // 最大ストリークを更新
+      maxStreakCount = Math.max(maxStreakCount, currentStreakCount);
+
+      // 今日のストリークを更新
+      if (item.date === todayYYYYMMDD) {
+        todayStreakCount = currentStreakCount;
+      }
+
+      // 最終処理された日付を更新
+      lastDate = currentDate;
+    }
+
+    // todayYYYYMMDDがデータに存在しない場合、昨日のストリークが今日のストリークになる
+    if (todayStreakCount === 0) {
+      // todayの一つ前の日付を取得
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayYYYYMMDD = yesterday.toISOString().split('T')[0].replace(/-/g, '');
+
+      const yesterdayData = sortedData.find(item => item.date === yesterdayYYYYMMDD);
+      if (yesterdayData && yesterdayData.status === STATUS_NO) {
+        // 昨日のデータがSTATUS_NOであれば、今日のストリークは昨日のストリークの継続
+        const tempStreak = [];
+        let date = yesterday;
+        while (true) {
+          const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
+          const data = sortedData.find(item => item.date === dateStr);
+          if (data && data.status === STATUS_NO) {
+            tempStreak.push(data);
+            date.setDate(date.getDate() - 1);
+          } else {
+            break;
+          }
         }
+        todayStreakCount = tempStreak.length;
       }
     }
 

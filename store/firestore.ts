@@ -4,16 +4,20 @@ import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 const auth = getAuth();
-let userId: string | null = null;
 
-export const signInAnonymouslyAsync = async () => {
-  if (userId) return userId;
+// ユーザーが匿名でサインインし、そのユーザーIDを返す
+// 既にログイン済みの場合は、既存のIDを返す
+export const signInAnonymouslyAsync = async (): Promise<string | null> => {
+  const currentUser = auth.currentUser;
+  if (currentUser) {
+    console.log('User is already signed in with UID:', currentUser.uid);
+    return currentUser.uid;
+  }
 
   try {
     const userCredential = await signInAnonymously(auth);
-    userId = userCredential.user.uid;
-    console.log('Signed in anonymously with UID:', userId);
-    return userId;
+    console.log('Signed in anonymously with UID:', userCredential.user.uid);
+    return userCredential.user.uid;
   } catch (error) {
     console.error('Error during anonymous sign-in:', error);
     return null;
@@ -22,6 +26,7 @@ export const signInAnonymouslyAsync = async () => {
 
 // 日付に対するステータスを書き込む
 export const setStatusForDate = async (data: CalendarDto) => {
+  const userId = auth.currentUser?.uid;
   if (!userId) {
     console.error('User not authenticated.');
     return;
@@ -40,6 +45,7 @@ export const setStatusForDate = async (data: CalendarDto) => {
 
 // 全ての日付とステータスを取得
 export const getAllData = async () => {
+  const userId = auth.currentUser?.uid;
   if (!userId) {
     console.error('User not authenticated.');
     return [];
@@ -58,6 +64,7 @@ export const getAllData = async () => {
 
 // 特定の日付のステータスを取得
 export const getStatusByDate = async (date: string): Promise<string | null> => {
+  const userId = auth.currentUser?.uid;
   if (!userId) {
     console.error('User not authenticated.');
     return null;
